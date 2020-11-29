@@ -48,7 +48,7 @@ inquirer
           validate: value => isNaN(parseInt(value)) ? 'Please enter a number!' : true
         }).then((answer) => {
           employees.push(new Manager(response.name, response.id, response.email, response.role, answer.office));
-          askAgain()
+          makeTeam();
         });
         break;
 
@@ -67,9 +67,10 @@ inquirer
           }
         }).then((answer) => {
           employees.push(new Engineer(response.name, response.id, response.email, response.role, answer.github));
-          askAgain()
+          makeTeam();
         });
         break;
+
       case "Intern":
         inquirer.prompt({
           type: 'input',
@@ -85,32 +86,15 @@ inquirer
           }
         }).then((answer) => {
           employees.push(new Intern(response.name, response.id, response.email, response.role, answer.school));
-          askAgain()
+          makeTeam();
         })
         break;
     }
   })
 
-function askAgain() {
-  inquirer.prompt([
-    {
-      type: 'confirm',
-      name: 'again',
-      message: "Would you like to enter another employee?"
-
-    }
-  ]).then((response) => {
-    if (response.again === true) {
-      askQuestions();
-    } else {
-      console.log(employees)
-      makeTeam();
-    }
-  })
-};
-
 function makeTeam() {
   fs.writeFile(outputPath, render(employees), function (err) {
     if (err) throw err;
-  })
-};
+    console.log('The file has been saved!');
+  });
+}
